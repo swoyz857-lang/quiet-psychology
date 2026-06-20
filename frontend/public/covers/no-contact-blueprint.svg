@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <rect width="400" height="600" fill="#0a0a0a"/>
+  <rect x="30" y="30" width="340" height="540" stroke="#c9a962" stroke-width="2" fill="none"/>
+  <rect x="50" y="50" width="300" height="500" fill="#121212"/>
+  <text x="200" y="220" font-family="Georgia, serif" font-size="32" fill="#c9a962" text-anchor="middle">THE</text>
+  <text x="200" y="280" font-family="Georgia, serif" font-size="42" fill="#f5f3ef" text-anchor="middle">NO-CONTACT</text>
+  <text x="200" y="340" font-family="Georgia, serif" font-size="42" fill="#f5f3ef" text-anchor="middle">BLUEPRINT</text>
+  <line x1="120" y1="420" x2="280" y2="420" stroke="#c9a962" stroke-width="1"/>
+  <text x="200" y="460" font-family="Inter, sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle" letter-spacing="4">BEHAVIORAL INTELLIGENCE</text>
+</svg>
