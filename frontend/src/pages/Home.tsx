@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Lock, Eye, Sparkles, Flame } from 'lucide-react';
+import { ArrowRight, Lock, Eye, Sparkles, Flame, ChevronDown, Star } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { useParallax } from '../hooks/useParallax';
 import { trackPageView } from '../hooks/useAnalytics';
@@ -20,7 +20,7 @@ import ReviewCard from '../components/ReviewCard';
 import Accordion from '../components/ui/Accordion';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
-import StarRating from '../components/ui/StarRating';
+
 import PricingDisplay from '../components/PricingDisplay';
 import BackgroundVideo from '../components/BackgroundVideo';
 import { FAQ_ITEMS, TRUST_METRICS } from '../lib/constants';
@@ -94,7 +94,7 @@ export default function Home() {
       />
 
       {/* Hero */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-8 md:pb-16">
+      <section className="relative min-h-[100dvh] flex flex-col items-center overflow-hidden px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-6 md:pb-16">
         <div
           className="absolute inset-0 transition-transform duration-100 ease-out"
           style={{ transform: `translateY(${parallaxY}px)` }}
@@ -124,59 +124,71 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl w-full">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="order-2 lg:order-1 text-center lg:text-left animate-fade-in relative">
+        {/* Trust bar — mobile + desktop */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto mt-2 md:mt-0 mb-6 md:mb-10">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5 animate-fade-in">
+            <div className="flex items-center gap-1.5 surface-glass px-3 py-1.5 rounded-full">
+              <Star size={14} className="text-soft-gold fill-soft-gold" />
+              <span className="text-sm font-medium text-heading">{TRUST_METRICS.rating.toFixed(1)}</span>
+              <span className="text-xs text-body hidden sm:inline">({TRUST_METRICS.reviews} reviews)</span>
+            </div>
+            <div className="flex items-center gap-1.5 surface-glass px-3 py-1.5 rounded-full">
+              <span className="text-sm font-medium text-heading">{TRUST_METRICS.purchases.toLocaleString('en-US')}</span>
+              <span className="text-xs text-body">sold</span>
+            </div>
+            <div className="flex items-center gap-1.5 surface-glass px-3 py-1.5 rounded-full">
+              <span className="text-sm font-medium text-heading">{TRUST_METRICS.readers.toLocaleString('en-US')}+</span>
+              <span className="text-xs text-body">readers</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-7xl w-full flex-1 flex flex-col justify-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            {/* Text content — first on mobile */}
+            <div className="order-1 text-center lg:text-left animate-fade-in relative">
               <div className="hidden lg:flex absolute -left-10 top-0 bottom-0 items-center">
-                <span className="text-[10px] tracking-[0.3em] uppercase text-soft-gold/60 writing-mode-vertical rotate-180" style={{ writingMode: 'vertical-rl' }}>
+                <span className="text-[10px] tracking-[0.3em] uppercase text-soft-gold/60" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
                   Premium Archive
                 </span>
               </div>
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 surface-glass rounded-full mb-6 md:mb-8 hero-glow">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 surface-glass rounded-full mb-4 md:mb-6 hero-glow">
                 <Sparkles size={14} className="text-soft-gold" />
-                <span className="text-xs tracking-[0.2em] uppercase text-soft-gold font-medium">
+                <span className="text-[10px] md:text-xs tracking-[0.2em] uppercase text-soft-gold font-medium">
                   Premium Bestseller
                 </span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-heading leading-[1.05] mb-5 md:mb-6">
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-heading leading-[1.05] mb-4 md:mb-6">
                 <span className="block">The No-Contact</span>
                 <span className="italic gradient-text gold-text-glow">Blueprint</span>
               </h1>
 
-              <p className="text-body text-lg md:text-xl leading-relaxed mb-6 md:mb-8 max-w-xl mx-auto lg:mx-0 min-h-[3.5rem]">
+              <p className="hidden md:block text-body text-lg md:text-xl leading-relaxed mb-6 md:mb-8 max-w-xl mx-auto lg:mx-0 min-h-[3.5rem]">
                 <Typewriter
                   text="The strategic intelligence guide for turning silence into power after a breakup or ghosting."
                   delay={600}
                   speed={28}
                 />
               </p>
+              <p className="md:hidden text-body text-base leading-relaxed mb-5 max-w-md mx-auto lg:mx-0">
+                The strategic intelligence guide for turning silence into power after a breakup or ghosting.
+              </p>
 
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 md:gap-5 mb-8 md:mb-10 text-sm text-body">
-                <div className="flex items-center gap-2 surface-glass px-3 py-1.5">
-                  <StarRating rating={TRUST_METRICS.rating} size={16} />
-                  <span className="text-heading font-medium">{TRUST_METRICS.rating.toFixed(1)}</span>
-                </div>
-                <span className="hidden sm:inline text-body/60">|</span>
-                <span>{TRUST_METRICS.reviews}+ verified readers</span>
-                <span className="hidden sm:inline text-body/60">|</span>
-                <span>{TRUST_METRICS.purchases.toLocaleString('en-US')} sold</span>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8 md:mb-10">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 md:gap-4 mb-6 md:mb-8">
                 <MagneticButton strength={0.2}>
-                  <Link to={featured ? `/checkout/${featured.slug}` : '/archive'}>
-                    <Button size="lg" className="w-full sm:w-auto pulse-gold shimmer-border group h-14 px-10 shadow-[0_0_40px_-10px_rgba(201,169,98,0.3)] hover:shadow-[0_0_60px_-10px_rgba(201,169,98,0.5)]">
-                      <span className="flex items-center">
+                  <Link to={featured ? `/checkout/${featured.slug}` : '/archive'} className="block">
+                    <Button size="lg" className="w-full sm:w-auto pulse-gold shimmer-border group h-12 md:h-14 px-6 md:px-10 shadow-[0_0_40px_-10px_rgba(201,169,98,0.3)] hover:shadow-[0_0_60px_-10px_rgba(201,169,98,0.5)]">
+                      <span className="flex items-center justify-center">
                         Get Instant Access <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
                       </span>
                     </Button>
                   </Link>
                 </MagneticButton>
                 <MagneticButton strength={0.15}>
-                  <Link to={featured ? `/books/${featured.slug}` : '/archive'}>
-                    <Button variant="outline" size="lg" className="w-full sm:w-auto hover:shadow-[0_0_30px_rgba(201,169,98,0.15)]">
+                  <Link to={featured ? `/books/${featured.slug}` : '/archive'} className="block">
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto hover:shadow-[0_0_30px_rgba(201,169,98,0.15)] h-12 md:h-14">
                       Read More
                     </Button>
                   </Link>
@@ -189,30 +201,31 @@ export default function Home() {
                   { icon: Eye, text: 'Instant Download' },
                   { icon: Sparkles, text: 'Lifetime Access' },
                 ].map(({ icon: Icon, text }) => (
-                  <span key={text} className="flex items-center gap-2 px-3 py-1.5 text-xs md:text-sm text-body">
+                  <span key={text} className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 text-xs text-body">
                     <Icon size={13} className="text-soft-gold" /> {text}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="order-1 lg:order-2 flex justify-center animate-fade-in hero-float" style={{ animationDelay: '0.15s' }}>
+            {/* Book cover — second on mobile */}
+            <div className="order-2 flex justify-center animate-fade-in hero-float" style={{ animationDelay: '0.15s' }}>
               {featured && (
                 <Link
                   to={`/books/${featured.slug}`}
-                  className="group relative block w-full max-w-[300px] sm:max-w-sm lg:max-w-md"
+                  className="group relative block w-full max-w-[260px] sm:max-w-[300px] lg:max-w-md"
                 >
-                  <div className="absolute -inset-8 sm:-inset-12 bg-gradient-to-tr from-soft-gold/25 via-transparent to-soft-gold/10 rounded-full blur-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="absolute inset-x-0 -bottom-8 h-16 bg-soft-gold/30 blur-3xl rounded-full opacity-60 group-hover:opacity-90 transition-opacity" />
+                  <div className="absolute -inset-6 sm:-inset-10 lg:-inset-12 bg-gradient-to-tr from-soft-gold/25 via-transparent to-soft-gold/10 rounded-full blur-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="absolute inset-x-0 -bottom-6 h-14 bg-soft-gold/30 blur-3xl rounded-full opacity-60 group-hover:opacity-90 transition-opacity" />
                   <Book3D src={featured.coverImage} alt={featured.title} className="relative w-full" />
-                  <div className="absolute -bottom-4 left-0 right-0 z-20 p-4 sm:p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                    <div className="surface-glass px-4 py-3 shadow-lg">
+                  <div className="absolute -bottom-2 sm:-bottom-4 left-0 right-0 z-20 p-3 sm:p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <div className="surface-glass px-3 sm:px-4 py-2 sm:py-3 shadow-lg">
                       <p className="text-[10px] tracking-widest uppercase text-soft-gold mb-0.5">Limited Pricing</p>
                       <div className="font-serif">
                         <PricingDisplay price={featured.price} comparePrice={featured.comparePrice} size="sm" layout="horizontal" showDiscount />
                       </div>
                       {featured.stock > 0 && (
-                        <p className="flex items-center gap-1.5 mt-2 text-[10px] text-soft-gold/90">
+                        <p className="flex items-center gap-1.5 mt-1.5 sm:mt-2 text-[10px] text-soft-gold/90">
                           <Flame size={10} className="text-soft-gold" />
                           Only {featured.stock.toLocaleString('en-US')} left
                         </p>
@@ -225,10 +238,11 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 mt-12 md:mt-16">
-          <Link to="#benefits" className="group flex flex-col items-center gap-2 text-body hover:text-soft-gold transition-colors">
-            <span className="text-[10px] tracking-[0.25em] uppercase text-soft-gold/70">Discover</span>
-            <span className="w-px h-10 bg-gradient-to-b from-soft-gold/60 to-transparent group-hover:h-12 transition-all duration-300" />
+        {/* Scroll indicator */}
+        <div className="relative z-10 mt-4 md:mt-10">
+          <Link to="#benefits" className="group flex flex-col items-center gap-1 text-body hover:text-soft-gold transition-colors animate-bounce">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-soft-gold/70">Swipe Up</span>
+            <ChevronDown size={20} className="text-soft-gold/70" />
           </Link>
         </div>
 

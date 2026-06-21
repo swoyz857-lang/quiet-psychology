@@ -14,7 +14,7 @@ export const config = {
   databaseUrl: process.env.DATABASE_URL || './data/quiet-psychology.db',
   jwtSecret: process.env.JWT_SECRET || 'default-dev-secret-not-for-production',
   adminEmail: process.env.ADMIN_EMAIL || 'admin@quietpsychology.com',
-  adminPassword: process.env.ADMIN_PASSWORD || 'admin789',
+  adminPassword: process.env.ADMIN_PASSWORD || 'ibrahim789',
   lemonsqueezy: {
     apiKey: process.env.LEMONSQUEEZY_API_KEY || '',
     webhookSecret: process.env.LEMONSQUEEZY_WEBHOOK_SECRET || '',

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { cn } from '../lib/utils';
 import { MessageCircle, X, Mail, FileQuestion, Send } from 'lucide-react';
 import Input from './ui/Input';
 import Button from './ui/Button';
@@ -46,6 +47,12 @@ export default function SupportWidget() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages, open]);
 
+  useEffect(() => {
+    const handleOpen = () => setOpen(true);
+    window.addEventListener('open-support-widget' as any, handleOpen);
+    return () => window.removeEventListener('open-support-widget' as any, handleOpen);
+  }, []);
+
   const handleSend = (text?: string) => {
     const msg = (text ?? input).trim();
     if (!msg) return;
@@ -61,11 +68,14 @@ export default function SupportWidget() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2 bg-soft-gold text-obsidian px-5 py-3 font-medium shadow-lg hover:bg-soft-gold-light transition-colors pulse-gold"
+          className={cn(
+            "items-center gap-2 bg-soft-gold text-obsidian px-5 py-3 font-medium shadow-lg hover:bg-soft-gold-light transition-colors pulse-gold",
+            "hidden md:flex"
+          )}
           aria-label="Open support chat"
         >
           <MessageCircle size={18} />
-          <span className="hidden sm:inline">Ask QP</span>
+          <span>Ask QP</span>
         </button>
       )}
 
