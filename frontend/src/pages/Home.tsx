@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Lock, Eye, Sparkles, Flame, ChevronDown, Star } from 'lucide-react';
+import { ArrowRight, Lock, Eye, Sparkles, Flame, ChevronDown, Star, Users } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { useParallax } from '../hooks/useParallax';
 import { trackPageView } from '../hooks/useAnalytics';
@@ -353,16 +353,49 @@ export default function Home() {
       {/* Email Capture */}
       <section className="relative page-section overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-light-gray to-cream dark:from-charcoal dark:to-obsidian" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(201,169,98,0.08),transparent_60%)]" />
-        <div className="relative z-10 container-narrow text-center">
-          <ScrollReveal>
-            <SectionHeading
-              title="Join the Research Archive"
-              description="Get new release alerts and behavioral intelligence updates."
-            />
-          </ScrollReveal>
-          <div className="mt-10 md:mt-12">
-            <EmailCapture source="homepage" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(201,169,98,0.12),transparent_55%)]" />
+
+        <div className="relative z-10 container-site">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <ScrollReveal>
+                <div className="text-center md:text-left">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-soft-gold/10 border border-soft-gold/20 rounded-full mb-5">
+                    <span className="text-[10px] tracking-[0.2em] uppercase text-soft-gold font-medium">
+                      Free Preview
+                    </span>
+                  </div>
+                  <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-heading mb-4 leading-tight">
+                    Join the <span className="italic text-soft-gold">Archive</span>
+                  </h2>
+                  <p className="text-body text-base md:text-lg leading-relaxed mb-6 max-w-md mx-auto md:mx-0">
+                    Get a private preview chapter from The No-Contact Blueprint and be the first to know when new intelligence publications drop.
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs text-body">
+                    <span className="flex items-center gap-1.5 surface-glass px-3 py-1.5">
+                      <Star size={12} className="text-soft-gold fill-soft-gold" /> 4.8 reader rating
+                    </span>
+                    <span className="flex items-center gap-1.5 surface-glass px-3 py-1.5">
+                      <Users size={12} className="text-soft-gold" /> 54,000+ readers
+                    </span>
+                  </div>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={150}>
+                <EmailCapture
+                  source="homepage"
+                  variant="boxed"
+                  title="Get the Free Chapter"
+                  subtitle="Enter your email below for instant access."
+                  benefits={[
+                    'Free PDF preview chapter',
+                    'Early access to new releases',
+                    'Unsubscribe anytime',
+                  ]}
+                />
+              </ScrollReveal>
+            </div>
           </div>
         </div>
       </section>
