@@ -362,14 +362,14 @@ export default function Home() {
                 <div className="text-center md:text-left">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-soft-gold/10 border border-soft-gold/20 rounded-full mb-5">
                     <span className="text-[10px] tracking-[0.2em] uppercase text-soft-gold font-medium">
-                      Free Preview
+                      Reader Updates
                     </span>
                   </div>
                   <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-heading mb-4 leading-tight">
                     Join the <span className="italic text-soft-gold">Archive</span>
                   </h2>
                   <p className="text-body text-base md:text-lg leading-relaxed mb-6 max-w-md mx-auto md:mx-0">
-                    Get a private preview chapter from The No-Contact Blueprint and be the first to know when new intelligence publications drop.
+                    Be the first to know when new intelligence publications drop. Join the private archive for exclusive updates and early release announcements.
                   </p>
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs text-body">
                     <span className="flex items-center gap-1.5 surface-glass px-3 py-1.5">
@@ -386,11 +386,11 @@ export default function Home() {
                 <EmailCapture
                   source="homepage"
                   variant="boxed"
-                  title="Get the Free Chapter"
-                  subtitle="Enter your email below for instant access."
+                  title="Join the Archive"
+                  subtitle="Enter your email below to subscribe."
                   benefits={[
-                    'Free PDF preview chapter',
                     'Early access to new releases',
+                    'Exclusive reader updates',
                     'Unsubscribe anytime',
                   ]}
                 />

@@ -13,8 +13,8 @@ interface EmailCaptureProps {
 }
 
 const DEFAULT_BENEFITS = [
-  'Free chapter from The No-Contact Blueprint',
   'Early access to new releases',
+  'Exclusive reader updates',
   'No spam. Unsubscribe anytime.',
 ];
 
@@ -88,7 +88,7 @@ export default function EmailCapture({
               <Sparkles size={18} className="text-green-500" />
             </div>
             <p className="text-heading font-medium mb-1">Welcome to the archive.</p>
-            <p className="text-body text-sm">Check your inbox for the free chapter preview.</p>
+            <p className="text-body text-sm">Check your inbox for exclusive updates.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -123,7 +123,7 @@ export default function EmailCapture({
                 </span>
               ) : (
                 <span className="flex items-center justify-center">
-                  Get Free Access <ArrowRight size={16} className="ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                  Join Archive <ArrowRight size={16} className="ml-2 group-hover/btn:translate-x-1 transition-transform" />
                 </span>
               )}
             </Button>

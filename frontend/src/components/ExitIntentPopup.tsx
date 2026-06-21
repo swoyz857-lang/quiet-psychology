@@ -62,10 +62,10 @@ export default function ExitIntentPopup() {
             </div>
 
             <h3 className="font-serif text-2xl md:text-3xl text-muted-white mb-3 leading-tight">
-              Get the <span className="italic text-soft-gold">Free Chapter</span>
+              Join the <span className="italic text-soft-gold">Private Archive</span>
             </h3>
             <p className="text-muted-gray text-sm md:text-base leading-relaxed mb-6">
-              Join the private archive and receive a preview of The No-Contact Blueprint — plus early access to every new release before it goes public.
+              Join the private archive for early access to every new release, exclusive reader updates, and first looks at new frameworks before they go public.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 mb-6 text-xs text-muted-gray">
@@ -82,8 +82,8 @@ export default function ExitIntentPopup() {
               variant="boxed"
               subtitle=""
               benefits={[
-                'Instant PDF preview chapter',
                 'First access to new publications',
+                'Exclusive reader updates',
                 'No spam. One-click unsubscribe.',
               ]}
             />
@@ -99,7 +99,7 @@ export default function ExitIntentPopup() {
                 className="relative w-full rounded-sm shadow-book"
               />
               <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-soft-gold text-obsidian text-[10px] font-medium tracking-widest uppercase px-4 py-1.5">
-                Free Preview
+                Bestseller
               </div>
             </div>
           </div>
