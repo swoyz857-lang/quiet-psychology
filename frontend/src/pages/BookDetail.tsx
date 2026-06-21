@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Check, ArrowRight, Lock, Download, Eye, Flame } from 'lucide-react';
+import { Check, ArrowRight, Download, Eye, Flame, BookOpen, FileText, Shield, Star, Users, ChevronRight } from 'lucide-react';
 import { useProduct } from '../hooks/useProducts';
 import { useParallax } from '../hooks/useParallax';
 import { trackProductView } from '../hooks/useAnalytics';
@@ -20,6 +20,7 @@ import StarRating from '../components/ui/StarRating';
 import { api } from '../lib/api';
 import type { Product, Review } from '../types';
 import { FAQ_ITEMS, TRUST_METRICS } from '../lib/constants';
+import { formatPrice } from '../lib/utils';
 
 const LEARNING_OUTCOMES: Record<string, string[]> = {
   'the-no-contact-blueprint': [
@@ -48,6 +49,41 @@ const LEARNING_OUTCOMES: Record<string, string[]> = {
   ],
 };
 
+const TABLE_OF_CONTENTS: Record<string, string[]> = {
+  'the-no-contact-blueprint': [
+    '01 — The Psychology of Silence',
+    '02 — Why No-Contact Resets Perception',
+    '03 — Dependency Loops and How to Break Them',
+    '04 — Strategic Withdrawal Framework',
+    '05 — Rebuilding Perceived Value',
+    '06 — Long-Term Emotional Discipline',
+  ],
+  'texting-psychology': [
+    '01 — The Signal-to-Noise Ratio',
+    '02 — Response Latency and Investment',
+    '03 — Emotional Triggers in Text',
+    '04 — Perception Management',
+    '05 — Common Mistakes and Corrections',
+    '06 — Advanced Texting Frameworks',
+  ],
+  'the-attachment-archive': [
+    '01 — Attachment Styles Mapped',
+    '02 — The Anxious-Avoidant Cycle',
+    '03 — Bonding Patterns and Emotional Dependency',
+    '04 — Recognizing Behavioral Signatures',
+    '05 — Navigating Withdrawal and Pursuit',
+    '06 — Restoring Relational Balance',
+  ],
+  'the-attraction-code': [
+    '01 — Desire as a Behavioral Equation',
+    '02 — Perceived Value and Mate Selection',
+    '03 — Status, Competence, and Mystery',
+    '04 — The Signals That Create Attraction',
+    '05 — Common Attraction Killers',
+    '06 — Building a Sustainable Edge',
+  ],
+};
+
 const WHO_NOT_FOR = [
   'People seeking motivational content',
   'People looking for therapy or clinical treatment',
@@ -64,12 +100,20 @@ const BUBBLE_REVIEWS = [
   { text: 'My mindset shifted in 3 days.', author: 'N.B.' },
 ];
 
+const INCLUDED_ITEMS = [
+  { icon: FileText, title: 'Premium PDF', description: 'Print-ready, formatted for all devices' },
+  { icon: BookOpen, title: 'EPUB Edition', description: 'Optimized for e-readers and tablets' },
+  { icon: Download, title: 'Instant Delivery', description: 'Download links sent immediately' },
+  { icon: Eye, title: 'Lifetime Access', description: 'Own it forever, no subscriptions' },
+];
+
 export default function BookDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { product, loading, error } = useProduct(slug || '');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState({ count: TRUST_METRICS.reviews, average: TRUST_METRICS.rating });
   const [related, setRelated] = useState<Product[]>([]);
+  const [showStickyCta, setShowStickyCta] = useState(false);
   const parallaxY = useParallax(0.2);
 
   useEffect(() => {
@@ -83,6 +127,14 @@ export default function BookDetail() {
       api.products.list().then((all) => setRelated(all.filter((p) => p.id !== product.id))).catch(() => {});
     }
   }, [product]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyCta(window.scrollY > 600);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const isNoContact = product?.slug === 'the-no-contact-blueprint';
 
@@ -116,6 +168,9 @@ export default function BookDetail() {
   }
 
   const outcomes = LEARNING_OUTCOMES[product.slug] || [];
+  const toc = TABLE_OF_CONTENTS[product.slug] || [];
+  const savings = product.comparePrice - product.price;
+  const discount = product.comparePrice > 0 ? Math.round((savings / product.comparePrice) * 100) : 0;
 
   return (
     <>
@@ -248,8 +303,13 @@ export default function BookDetail() {
               <ScrollReveal delay={200}>
                 <div className="mb-6 md:mb-8 p-5 md:p-6 surface-card inline-block">
                   <PricingDisplay price={product.price} comparePrice={product.comparePrice} size="lg" showDiscount />
+                  {discount > 0 && (
+                    <p className="text-sm text-soft-gold mt-3">
+                      You save {formatPrice(savings)} ({discount}% off) — limited pricing
+                    </p>
+                  )}
                   {product.stock > 0 && (
-                    <p className="flex items-center gap-2 mt-4 text-sm text-soft-gold/90">
+                    <p className="flex items-center gap-2 mt-3 text-sm text-soft-gold/90">
                       <Flame size={14} className="text-soft-gold" />
                       Only {product.stock.toLocaleString('en-US')} copies remaining at this price
                     </p>
@@ -275,19 +335,14 @@ export default function BookDetail() {
               </ScrollReveal>
 
               <ScrollReveal delay={400}>
-                <div className="flex flex-wrap items-center gap-4 md:gap-5 text-sm text-body">
-                  <span className="flex items-center gap-2">
-                    <Check size={16} className="text-soft-gold" /> PDF + EPUB
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Download size={16} className="text-soft-gold" /> Instant Download
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Eye size={16} className="text-soft-gold" /> Lifetime Access
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Lock size={16} className="text-soft-gold" /> Secure Payment
-                  </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+                  {INCLUDED_ITEMS.map(({ icon: Icon, title, description }) => (
+                    <div key={title} className="surface-glass p-4 text-center">
+                      <Icon size={18} className="mx-auto mb-2 text-soft-gold" />
+                      <p className="text-xs font-medium text-heading mb-0.5">{title}</p>
+                      <p className="text-[10px] text-body leading-tight">{description}</p>
+                    </div>
+                  ))}
                 </div>
               </ScrollReveal>
             </div>
@@ -295,6 +350,48 @@ export default function BookDetail() {
         </div>
       </section>
 
+      {/* What's Included */}
+      <section className="page-section surface-elevated">
+        <div className="container-site">
+          <ScrollReveal>
+            <SectionHeading eyebrow="What You Get" title="Everything Included" />
+          </ScrollReveal>
+          <div className="mt-14 md:mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {INCLUDED_ITEMS.map(({ icon: Icon, title, description }, i) => (
+              <ScrollReveal key={title} delay={i * 100}>
+                <div className="bg-charcoal/30 dark:bg-white/[0.03] border border-black/5 dark:border-white/5 p-6 text-center h-full hover:border-soft-gold/20 transition-colors">
+                  <div className="w-12 h-12 mx-auto mb-4 bg-soft-gold/10 rounded-full flex items-center justify-center">
+                    <Icon size={22} className="text-soft-gold" />
+                  </div>
+                  <h3 className="font-serif text-lg text-heading mb-2">{title}</h3>
+                  <p className="text-body text-sm leading-relaxed">{description}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Table of Contents */}
+      <section className="page-section">
+        <div className="container-narrow">
+          <ScrollReveal>
+            <SectionHeading eyebrow="Inside the Publication" title="Table of Contents" />
+          </ScrollReveal>
+          <div className="mt-10 md:mt-14 max-w-2xl mx-auto">
+            {toc.map((chapter, i) => (
+              <ScrollReveal key={chapter} delay={i * 75}>
+                <div className="flex items-center gap-4 py-4 border-b border-black/5 dark:border-white/5 group hover:pl-2 transition-all">
+                  <ChevronRight size={16} className="text-soft-gold opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <p className="text-heading font-medium">{chapter}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Learning + Who Is It For */}
       <section className="page-section surface-elevated">
         <div className="container-site">
           <div className="grid md:grid-cols-2 gap-10 lg:gap-20">
@@ -336,7 +433,37 @@ export default function BookDetail() {
         </div>
       </section>
 
+      {/* Archive Note */}
       <section className="page-section">
+        <div className="container-narrow">
+          <ScrollReveal>
+            <div className="surface-card p-8 md:p-12 text-center">
+              <div className="w-14 h-14 mx-auto mb-5 bg-soft-gold/10 rounded-full flex items-center justify-center">
+                <Shield size={26} className="text-soft-gold" />
+              </div>
+              <h2 className="font-serif text-2xl md:text-3xl text-heading mb-3">A Premium Archive Standard</h2>
+              <p className="text-body leading-relaxed max-w-2xl mx-auto mb-6">
+                Every publication in the Quiet Psychology archive is built on behavioral science, not opinion.
+                No motivational filler. No guru branding. Only clean, research-driven frameworks you can apply immediately.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-body">
+                <span className="flex items-center gap-1.5">
+                  <Star size={14} className="text-soft-gold fill-soft-gold" /> {TRUST_METRICS.rating} reader rating
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Users size={14} className="text-soft-gold" /> {TRUST_METRICS.purchases.toLocaleString('en-US')} purchases
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <BookOpen size={14} className="text-soft-gold" /> 4 publications
+                </span>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="page-section surface-elevated">
         <div className="container-narrow">
           <ScrollReveal>
             <SectionHeading eyebrow="Questions" title="Frequently Asked" />
@@ -347,8 +474,9 @@ export default function BookDetail() {
         </div>
       </section>
 
+      {/* Reviews */}
       {reviews.length > 0 && (
-        <section className="page-section surface-elevated">
+        <section className="page-section">
           <div className="container-site">
             <ScrollReveal>
               <SectionHeading eyebrow="Reviews" title="Reader Feedback" />
@@ -364,8 +492,9 @@ export default function BookDetail() {
         </section>
       )}
 
+      {/* Related */}
       {related.length > 0 && (
-        <section className="page-section">
+        <section className="page-section surface-elevated">
           <div className="container-site">
             <ScrollReveal>
               <SectionHeading eyebrow="Related" title="Other Publications" />
@@ -380,6 +509,29 @@ export default function BookDetail() {
           </div>
         </section>
       )}
+
+      {/* Sticky mobile CTA */}
+      <div
+        className={`
+          fixed bottom-0 left-0 right-0 z-40 p-4 bg-charcoal/95 backdrop-blur-md border-t border-white/10
+          transform transition-transform duration-300 md:hidden
+          ${showStickyCta ? 'translate-y-0' : 'translate-y-full'}
+        `}
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="font-serif text-lg text-muted-white">{formatPrice(product.price)}</p>
+            {discount > 0 && (
+              <p className="text-xs text-muted-gray line-through">{formatPrice(product.comparePrice)}</p>
+            )}
+          </div>
+          <Link to={`/checkout/${product.slug}`} className="flex-1 max-w-xs">
+            <Button size="lg" className="w-full pulse-gold">
+              Get Instant Access
+            </Button>
+          </Link>
+        </div>
+      </div>
 
       <style>{`
         @keyframes bubbleMove {
