@@ -172,7 +172,6 @@ async function start() {
     console.log('Database is empty. Initializing schema and seed data...');
     initDatabase();
     seedDatabase();
-    persistDb();
   }
 
   await ensureAdminPassword();
