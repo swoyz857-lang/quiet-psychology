@@ -166,6 +166,15 @@ if (fs.existsSync(distPath)) {
 
 async function start() {
   await initializeDb();
+
+  const usersTable = queryOne("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
+  if (!usersTable) {
+    console.log('Database is empty. Initializing schema and seed data...');
+    initDatabase();
+    seedDatabase();
+    persistDb();
+  }
+
   await ensureAdminPassword();
 
   if (process.argv.includes('--init')) {

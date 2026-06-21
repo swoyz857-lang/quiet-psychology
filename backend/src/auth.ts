@@ -15,7 +15,17 @@ export async function ensureAdminPassword(): Promise<void> {
   const user = queryOne('SELECT id, password_hash FROM users WHERE email = ?', [
     config.adminEmail,
   ]) as { id: number; password_hash: string } | undefined;
-  if (!user) return;
+
+  if (!user) {
+    const hash = await hashPassword(config.adminPassword);
+    run('INSERT INTO users (email, name, password_hash, is_admin) VALUES (?, ?, ?, 1)', [
+      config.adminEmail,
+      'Admin',
+      hash,
+    ]);
+    console.log('Admin user created.');
+    return;
+  }
 
   const valid = await verifyPassword(config.adminPassword, user.password_hash);
   if (valid) return;
