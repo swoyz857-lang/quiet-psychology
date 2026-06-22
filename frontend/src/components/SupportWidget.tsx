@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '../lib/utils';
-import { MessageCircle, X, Mail, FileQuestion, Send } from 'lucide-react';
+import { X, Mail, FileQuestion, Send } from 'lucide-react';
 import Input from './ui/Input';
 import Button from './ui/Button';
+import QPCharacter from './QPCharacter';
 
 interface Message {
   role: 'user' | 'bot';
@@ -74,7 +75,7 @@ export default function SupportWidget() {
           )}
           aria-label="Open support chat"
         >
-          <MessageCircle size={18} />
+          <QPCharacter size={22} />
           <span>Ask QP</span>
         </button>
       )}
@@ -82,9 +83,14 @@ export default function SupportWidget() {
       {open && (
         <div className="w-[calc(100vw-2rem)] sm:w-96 surface-card shadow-2xl flex flex-col max-h-[80vh]">
           <div className="flex items-center justify-between p-4 border-b border-black/5 dark:border-white/10">
-            <div>
-              <span className="font-serif text-lg text-heading">Quiet Assistant</span>
-              <p className="text-[10px] tracking-widest uppercase text-body">AI-guided support</p>
+            <div className="flex items-center gap-3">
+              <div className="bg-white/10 rounded-full p-1.5">
+                <QPCharacter size={28} />
+              </div>
+              <div>
+                <span className="font-serif text-lg text-heading">Quiet Assistant</span>
+                <p className="text-[10px] tracking-widest uppercase text-body">AI-guided support</p>
+              </div>
             </div>
             <button onClick={() => setOpen(false)} aria-label="Close support" className="text-body hover:text-soft-gold transition-colors">
               <X size={18} />

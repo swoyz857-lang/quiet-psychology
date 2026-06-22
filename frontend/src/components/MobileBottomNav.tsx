@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Mail, MessageCircle } from 'lucide-react';
+import { Home, BookOpen, Mail } from 'lucide-react';
 import { cn } from '../lib/utils';
+import QPCharacter from './QPCharacter';
 
 const links = [
   { to: '/', label: 'Home', icon: Home },
@@ -40,7 +41,7 @@ export default function MobileBottomNav() {
           className="relative -mt-5 flex flex-col items-center justify-center w-14 h-14 bg-soft-gold text-obsidian rounded-full shadow-lg shadow-soft-gold/30 hover:bg-soft-gold-light transition-colors"
           aria-label="Open support chat"
         >
-          <MessageCircle size={22} />
+          <QPCharacter size={26} />
           <span className="text-[9px] font-medium mt-0.5">Ask QP</span>
         </button>
 
