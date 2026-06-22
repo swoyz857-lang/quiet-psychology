@@ -11,6 +11,7 @@ const footerLinks = [
   { label: 'Privacy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },
   { label: 'Refund Policy', href: '/refund' },
+  { label: 'Disclaimer', href: '/disclaimer' },
 ];
 
 const socialLinks = [
