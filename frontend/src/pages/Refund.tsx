@@ -56,8 +56,8 @@ export default function Refund() {
               </ul>
               <p className="mt-4">
                 In such cases, customers should contact{' '}
-                <a href="mailto:support@quietpsychology.com" className="text-soft-gold hover:underline">
-                  support@quietpsychology.com
+                <a href="mailto:quietpsychologyhq@gmail.com" className="text-soft-gold hover:underline">
+                  quietpsychologyhq@gmail.com
                 </a>{' '}
                 within 7 days of purchase.
               </p>
@@ -81,8 +81,8 @@ export default function Refund() {
                 <div>
                   <h2 className="font-serif text-xl text-heading mb-2">Contact</h2>
                   <p className="mb-2">For refund-related inquiries:</p>
-                  <a href="mailto:support@quietpsychology.com" className="text-soft-gold hover:underline font-medium">
-                    support@quietpsychology.com
+                  <a href="mailto:quietpsychologyhq@gmail.com" className="text-soft-gold hover:underline font-medium">
+                    quietpsychologyhq@gmail.com
                   </a>
                 </div>
               </div>

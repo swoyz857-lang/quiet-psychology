@@ -102,8 +102,8 @@ export default function Disclaimer() {
                 <div>
                   <h2 className="font-serif text-xl text-heading mb-2">Contact</h2>
                   <p className="mb-2">For questions regarding this disclaimer:</p>
-                  <a href="mailto:support@quietpsychology.com" className="text-soft-gold hover:underline font-medium">
-                    support@quietpsychology.com
+                  <a href="mailto:quietpsychologyhq@gmail.com" className="text-soft-gold hover:underline font-medium">
+                    quietpsychologyhq@gmail.com
                   </a>
                 </div>
               </div>

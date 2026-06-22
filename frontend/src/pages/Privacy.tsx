@@ -126,8 +126,8 @@ export default function Privacy() {
                 <li className="flex items-start gap-3"><span className="mt-1.5 w-1.5 h-1.5 bg-soft-gold rounded-full shrink-0" /> Data portability requests</li>
               </ul>
               <p className="mt-3">Requests may be submitted to{' '}
-                <a href="mailto:support@quietpsychology.com" className="text-soft-gold hover:underline">
-                  support@quietpsychology.com
+                <a href="mailto:quietpsychologyhq@gmail.com" className="text-soft-gold hover:underline">
+                  quietpsychologyhq@gmail.com
                 </a>.
               </p>
             </div>
@@ -139,8 +139,8 @@ export default function Privacy() {
                 </div>
                 <div>
                   <h2 className="font-serif text-xl text-heading mb-2">Contact</h2>
-                  <a href="mailto:support@quietpsychology.com" className="text-soft-gold hover:underline font-medium">
-                    support@quietpsychology.com
+                  <a href="mailto:quietpsychologyhq@gmail.com" className="text-soft-gold hover:underline font-medium">
+                    quietpsychologyhq@gmail.com
                   </a>
                 </div>
               </div>

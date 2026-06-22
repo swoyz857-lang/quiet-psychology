@@ -116,8 +116,8 @@ export default function Terms() {
                 </div>
                 <div>
                   <h2 className="font-serif text-xl text-heading mb-2">Contact</h2>
-                  <a href="mailto:support@quietpsychology.com" className="text-soft-gold hover:underline font-medium">
-                    support@quietpsychology.com
+                  <a href="mailto:quietpsychologyhq@gmail.com" className="text-soft-gold hover:underline font-medium">
+                    quietpsychologyhq@gmail.com
                   </a>
                 </div>
               </div>
