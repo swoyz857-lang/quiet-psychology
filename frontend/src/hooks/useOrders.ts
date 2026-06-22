@@ -8,6 +8,7 @@ export function useOrders(status?: string) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setLoading(true);
     api.orders
       .list(status)
       .then(setOrders)
@@ -20,5 +21,10 @@ export function useOrders(status?: string) {
     setOrders((prev) => prev.map((o) => (o.id === id ? updated : o)));
   };
 
-  return { orders, loading, error, updateStatus };
+  const remove = async (id: number) => {
+    await api.orders.delete(id);
+    setOrders((prev) => prev.filter((o) => o.id !== id));
+  };
+
+  return { orders, loading, error, updateStatus, remove };
 }

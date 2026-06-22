@@ -1,5 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
 import { api } from '../../lib/api';
 import { formatPrice, formatDate } from '../../lib/utils';
 import {
@@ -11,29 +23,63 @@ import {
   BookOpen,
   ArrowRight,
   MessageSquare,
+  BarChart3,
 } from 'lucide-react';
 import type { Order, Review, SupportTicket } from '../../types';
 
+interface DashboardStats {
+  totalRevenue: number;
+  totalOrders: number;
+  totalSubscribers: number;
+  totalReviews: number;
+  conversionRate: number;
+  dailyRevenue: { date: string; revenue: number; orders: number }[];
+  statusDistribution: { status: string; count: number }[];
+  productSales: { product_id: number; revenue: number; orders: number }[];
+  recentOrders: Order[];
+  recentReviews: Review[];
+  recentTickets: SupportTicket[];
+}
+
+const statusColors: Record<string, string> = {
+  pending: '#EAB308',
+  paid: '#22C55E',
+  failed: '#EF4444',
+  refunded: '#9CA3AF',
+};
+
+const productColors = ['#C8A05A', '#A0AEC0', '#4A5568', '#2D3748', '#1A202C'];
+
+function shortDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<{
-    totalRevenue: number;
-    totalOrders: number;
-    totalSubscribers: number;
-    totalReviews: number;
-    conversionRate: number;
-    recentOrders: Order[];
-    recentReviews: Review[];
-    recentTickets: SupportTicket[];
-  } | null>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.auth
       .dashboard()
-      .then(setStats)
+      .then((data) => setStats(data as DashboardStats))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const revenueChartData = useMemo(() => {
+    if (!stats) return [];
+    return stats.dailyRevenue.map((d) => ({ name: shortDate(d.date), revenue: d.revenue, orders: d.orders }));
+  }, [stats]);
+
+  const statusChartData = useMemo(() => {
+    if (!stats) return [];
+    return stats.statusDistribution.map((s) => ({ name: s.status, value: s.count }));
+  }, [stats]);
+
+  const productChartData = useMemo(() => {
+    if (!stats) return [];
+    return stats.productSales.map((p) => ({ name: `Product #${p.product_id}`, value: p.revenue, orders: p.orders }));
+  }, [stats]);
 
   if (loading || !stats) {
     return (
@@ -87,6 +133,76 @@ export default function AdminDashboard() {
             <p className="font-serif text-2xl text-muted-white">{s.value}</p>
           </Link>
         ))}
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-charcoal border border-white/5 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="font-serif text-xl text-muted-white">Revenue Trend</h2>
+              <p className="text-muted-gray text-xs mt-1">Last 30 days of paid orders</p>
+            </div>
+            <BarChart3 size={18} className="text-soft-gold" />
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={revenueChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#C8A05A" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#C8A05A" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="name" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#1A1A1A', border: '1px solid rgba(255,255,255,0.1)', color: '#E5E5E5' }}
+                  itemStyle={{ color: '#E5E5E5' }}
+                  formatter={(value) => [typeof value === 'number' ? formatPrice(value) : value, 'Revenue']}
+                />
+                <Area type="monotone" dataKey="revenue" stroke="#C8A05A" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="bg-charcoal border border-white/5 p-6">
+            <h2 className="font-serif text-xl text-muted-white mb-4">Order Status</h2>
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={statusChartData}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={3}
+                    stroke="none"
+                  >
+                    {statusChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={statusColors[entry.name] || '#4B5563'} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#1A1A1A', border: '1px solid rgba(255,255,255,0.1)' }}
+                    itemStyle={{ color: '#E5E5E5' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {statusChartData.map((s) => (
+                <span key={s.name} className="inline-flex items-center gap-1.5 text-xs text-muted-gray">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: statusColors[s.name] || '#4B5563' }} />
+                  {s.name.charAt(0).toUpperCase() + s.name.slice(1)} ({s.value})
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -156,6 +272,26 @@ export default function AdminDashboard() {
         </div>
 
         <div className="space-y-6">
+          <div className="bg-charcoal border border-white/5 p-6">
+            <h2 className="font-serif text-xl text-muted-white mb-4">Top Products</h2>
+            {productChartData.length === 0 ? (
+              <p className="text-muted-gray text-sm">No paid orders yet.</p>
+            ) : (
+              <div className="space-y-4">
+                {productChartData.map((p, i) => (
+                  <div key={p.name} className="flex items-center gap-3">
+                    <div className="w-2 h-10 rounded-sm" style={{ backgroundColor: productColors[i % productColors.length] }} />
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-white">{p.name}</p>
+                      <p className="text-xs text-muted-gray">{p.orders} orders</p>
+                    </div>
+                    <span className="text-sm font-medium text-soft-gold">{formatPrice(p.value)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="bg-charcoal border border-white/5 p-6">
             <h2 className="font-serif text-xl text-muted-white mb-4">Quick Actions</h2>
             <div className="space-y-2">

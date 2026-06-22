@@ -33,6 +33,7 @@ export const api = {
     list: (status?: string) => fetchJson<Order[]>(`/api/orders${status ? `?status=${status}` : ''}`),
     updateStatus: (id: number, status: string) =>
       fetchJson<Order>(`/api/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
+    delete: (id: number) => fetchJson<{ success: boolean; message: string }>(`/api/orders/${id}`, { method: 'DELETE' }),
   },
   reviews: {
     list: (productId?: number) => fetchJson<Review[]>(`/api/reviews${productId ? `?productId=${productId}` : ''}`),

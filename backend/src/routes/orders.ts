@@ -95,4 +95,12 @@ app.put('/:id/status', authenticate, requireAdmin, async (c) => {
   return c.json(rowToOrder(row));
 });
 
+app.delete('/:id', authenticate, requireAdmin, (c) => {
+  const id = parseInt(c.req.param('id'), 10);
+  const row = queryOne('SELECT * FROM orders WHERE id = ?', [id]) as Record<string, unknown> | undefined;
+  if (!row) return c.json({ message: 'Order not found' }, 404);
+  run('DELETE FROM orders WHERE id = ?', [id]);
+  return c.json({ success: true, message: 'Order deleted' });
+});
+
 export default app;

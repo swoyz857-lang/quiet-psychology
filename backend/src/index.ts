@@ -83,6 +83,18 @@ app.get('/api/dashboard', async (c) => {
   ).count;
   const conversionRate = productViews > 0 ? Number(((totalOrders / productViews) * 100).toFixed(2)) : 0;
 
+  const dailyRevenue = queryAll(
+    "SELECT DATE(created_at) as date, COALESCE(SUM(amount), 0) as revenue, COUNT(*) as orders FROM orders WHERE status = 'paid' AND created_at >= DATE('now', '-30 days') GROUP BY DATE(created_at) ORDER BY DATE(created_at)"
+  ) as { date: string; revenue: number; orders: number }[];
+
+  const statusDistribution = queryAll(
+    'SELECT status, COUNT(*) as count FROM orders GROUP BY status'
+  ) as { status: string; count: number }[];
+
+  const productSales = queryAll(
+    "SELECT product_id, COALESCE(SUM(amount), 0) as revenue, COUNT(*) as orders FROM orders WHERE status = 'paid' GROUP BY product_id ORDER BY revenue DESC LIMIT 5"
+  ) as { product_id: number; revenue: number; orders: number }[];
+
   const recentOrders = queryAll('SELECT * FROM orders ORDER BY created_at DESC LIMIT 5') as Record<string, unknown>[];
   const recentReviews = queryAll('SELECT * FROM reviews ORDER BY created_at DESC LIMIT 5') as Record<string, unknown>[];
   const recentTickets = queryAll('SELECT * FROM support_tickets ORDER BY created_at DESC LIMIT 5') as Record<string, unknown>[];
@@ -93,6 +105,9 @@ app.get('/api/dashboard', async (c) => {
     totalSubscribers,
     totalReviews,
     conversionRate,
+    dailyRevenue,
+    statusDistribution,
+    productSales,
     recentOrders,
     recentReviews,
     recentTickets,
