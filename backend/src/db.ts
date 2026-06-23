@@ -63,7 +63,20 @@ function columnExists(db: SqlJsDatabase, table: string, column: string): boolean
   return exists;
 }
 
+function tableExists(db: SqlJsDatabase, table: string): boolean {
+  const stmt = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`);
+  stmt.bind([table]);
+  const exists = stmt.step();
+  stmt.free();
+  return exists;
+}
+
 function runMigrations(db: SqlJsDatabase): void {
+  if (!tableExists(db, 'products')) {
+    // Schema will be initialized later; nothing to migrate yet.
+    return;
+  }
+
   if (!columnExists(db, 'products', 'external_checkout_url')) {
     db.exec(`ALTER TABLE products ADD COLUMN external_checkout_url TEXT;`);
     console.log('Migration: added external_checkout_url column');
