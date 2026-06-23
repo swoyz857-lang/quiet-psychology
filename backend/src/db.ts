@@ -45,7 +45,43 @@ export async function initializeDb(): Promise<SqlJsDatabase> {
   }
 
   dbInstance = new SQL.Database(data);
+  runMigrations(dbInstance);
   return dbInstance;
+}
+
+function columnExists(db: SqlJsDatabase, table: string, column: string): boolean {
+  const stmt = db.prepare(`PRAGMA table_info(${table})`);
+  let exists = false;
+  while (stmt.step()) {
+    const row = stmt.getAsObject();
+    if (row.name === column) {
+      exists = true;
+      break;
+    }
+  }
+  stmt.free();
+  return exists;
+}
+
+function runMigrations(db: SqlJsDatabase): void {
+  if (!columnExists(db, 'products', 'external_checkout_url')) {
+    db.exec(`ALTER TABLE products ADD COLUMN external_checkout_url TEXT;`);
+    console.log('Migration: added external_checkout_url column');
+
+    const urls: Record<string, string> = {
+      'the-no-contact-blueprint': 'https://quietpsychologyhq.gumroad.com/l/no-contact-blueprint?wanted=true',
+      'the-attachment-archive': 'https://quietpsychologyhq.gumroad.com/l/attachment-archive?wanted=true',
+      'the-attraction-code': 'https://quietpsychologyhq.gumroad.com/l/attraction-code?wanted=true',
+      'texting-psychology': 'https://quietpsychologyhq.gumroad.com/l/validation-cycle?wanted=true',
+    };
+
+    for (const [slug, url] of Object.entries(urls)) {
+      db.run(`UPDATE products SET external_checkout_url = ? WHERE slug = ?`, [url, slug]);
+    }
+
+    persistDb();
+    console.log('Migration: populated default Gumroad checkout URLs');
+  }
 }
 
 export function getDb(): SqlJsDatabase {

@@ -15,6 +15,7 @@ export interface Product {
   stock: number;
   lemonsqueezyVariantId: string | null;
   lemonsqueezyProductId: string | null;
+  externalCheckoutUrl: string | null;
   metaTitle: string;
   metaDescription: string;
   createdAt: string;
@@ -37,6 +38,7 @@ export interface ProductInput {
   stock?: number;
   lemonsqueezyVariantId?: string | null;
   lemonsqueezyProductId?: string | null;
+  externalCheckoutUrl?: string | null;
   metaTitle: string;
   metaDescription: string;
 }

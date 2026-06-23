@@ -98,7 +98,7 @@ export default function Privacy() {
               </div>
               <p className="mb-3">We may use trusted third-party providers including:</p>
               <ul className="space-y-2">
-                <li className="flex items-start gap-3"><span className="mt-1.5 w-1.5 h-1.5 bg-soft-gold rounded-full shrink-0" /> Lemon Squeezy</li>
+                <li className="flex items-start gap-3"><span className="mt-1.5 w-1.5 h-1.5 bg-soft-gold rounded-full shrink-0" /> Gumroad</li>
                 <li className="flex items-start gap-3"><span className="mt-1.5 w-1.5 h-1.5 bg-soft-gold rounded-full shrink-0" /> Google Analytics</li>
                 <li className="flex items-start gap-3"><span className="mt-1.5 w-1.5 h-1.5 bg-soft-gold rounded-full shrink-0" /> Microsoft Clarity</li>
                 <li className="flex items-start gap-3"><span className="mt-1.5 w-1.5 h-1.5 bg-soft-gold rounded-full shrink-0" /> Cloudflare</li>

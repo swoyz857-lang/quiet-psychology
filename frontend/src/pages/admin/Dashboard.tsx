@@ -311,7 +311,7 @@ export default function AdminDashboard() {
           <div className="bg-gradient-to-br from-soft-gold/10 to-transparent border border-soft-gold/20 p-6">
             <h3 className="font-serif text-lg text-muted-white mb-2">Need help?</h3>
             <p className="text-muted-gray text-sm mb-4">
-              Configure LemonSqueezy, SMTP, and domain settings from the Settings page.
+              Configure payment provider, SMTP, and domain settings from the Settings page.
             </p>
             <Link to="/admin/settings" className="text-sm text-soft-gold hover:underline">
               Open Settings →

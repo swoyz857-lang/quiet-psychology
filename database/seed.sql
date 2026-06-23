@@ -4,6 +4,7 @@ INSERT INTO products (
   slug, title, subtitle, description, short_description,
   price, compare_price, cover_image, pdf_url, epub_url,
   visibility, featured, stock, lemonsqueezy_variant_id, lemonsqueezy_product_id,
+  external_checkout_url,
   meta_title, meta_description
 ) VALUES
 (
@@ -17,6 +18,7 @@ INSERT INTO products (
   '/api/downloads/the-no-contact-blueprint/pdf',
   '/api/downloads/the-no-contact-blueprint/epub',
   'visible', 1, 8463, 'ls_variant_no_contact', 'ls_product_no_contact',
+  'https://quietpsychologyhq.gumroad.com/l/no-contact-blueprint?wanted=true',
   'The No-Contact Blueprint | Quiet Psychology',
   'The definitive behavioral intelligence guide to no-contact psychology, silence, and emotional recovery.'
 ),
@@ -31,6 +33,7 @@ INSERT INTO products (
   '/api/downloads/texting-psychology/pdf',
   '/api/downloads/texting-psychology/epub',
   'visible', 2, 8463, 'ls_variant_texting', 'ls_product_texting',
+  'https://quietpsychologyhq.gumroad.com/l/validation-cycle?wanted=true',
   'Texting Psychology | Quiet Psychology',
   'A framework-driven guide to understanding communication psychology and texting behavior.'
 ),
@@ -45,6 +48,7 @@ INSERT INTO products (
   '/api/downloads/the-attachment-archive/pdf',
   '/api/downloads/the-attachment-archive/epub',
   'visible', 3, 8463, 'ls_variant_attachment', 'ls_product_attachment',
+  'https://quietpsychologyhq.gumroad.com/l/attachment-archive?wanted=true',
   'The Attachment Archive | Quiet Psychology',
   'A deep behavioral archive explaining attachment psychology and relationship dynamics.'
 ),
@@ -59,6 +63,7 @@ INSERT INTO products (
   '/api/downloads/the-attraction-code/pdf',
   '/api/downloads/the-attraction-code/epub',
   'visible', 4, 8463, 'ls_variant_attraction', 'ls_product_attraction',
+  'https://quietpsychologyhq.gumroad.com/l/attraction-code?wanted=true',
   'The Attraction Code | Quiet Psychology',
   'A premium behavioral intelligence report on attraction dynamics and desire.'
 );

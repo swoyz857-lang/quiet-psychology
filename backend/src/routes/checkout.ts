@@ -32,10 +32,6 @@ async function lemonsqueezyRequest(path: string, options: RequestInit = {}) {
 }
 
 app.post('/session', async (c) => {
-  if (!config.lemonsqueezy.apiKey || !config.lemonsqueezy.storeId) {
-    return c.json({ message: 'Payment provider not configured' }, 503);
-  }
-
   const body = await c.req.json();
   const parsed = checkoutSchema.safeParse(body);
   if (!parsed.success) return c.json({ message: 'Invalid checkout data' }, 400);
@@ -46,10 +42,7 @@ app.post('/session', async (c) => {
     | undefined;
   if (!product) return c.json({ message: 'Product not found' }, 404);
 
-  const variantId = product.lemonsqueezy_variant_id as string | undefined;
-  if (!variantId || variantId.startsWith('ls_variant_')) {
-    return c.json({ message: 'Payment not configured for this product' }, 400);
-  }
+  const externalUrl = (product.external_checkout_url as string | undefined) || '';
 
   const order = createOrder({
     email,
@@ -64,6 +57,22 @@ app.post('/session', async (c) => {
     payload: { productId: product.id, productSlug: slug, orderId: order.id },
     path: `/checkout/${slug}`,
   });
+
+  if (externalUrl) {
+    const checkoutUrl = new URL(externalUrl);
+    checkoutUrl.searchParams.set('email', email);
+    if (name) checkoutUrl.searchParams.set('name', name);
+    return c.json({ checkoutId: null, url: checkoutUrl.toString() });
+  }
+
+  if (!config.lemonsqueezy.apiKey || !config.lemonsqueezy.storeId) {
+    return c.json({ message: 'No checkout URL configured for this product. Add an external checkout URL in the admin panel or configure a payment provider.' }, 503);
+  }
+
+  const variantId = product.lemonsqueezy_variant_id as string | undefined;
+  if (!variantId || variantId.startsWith('ls_variant_')) {
+    return c.json({ message: 'Payment not configured for this product' }, 400);
+  }
 
   const redirectUrl = `${config.frontendUrl}/thank-you`;
 

@@ -19,6 +19,7 @@ const DEFAULT_PRODUCT: ProductInput = {
   stock: 8463,
   lemonsqueezyVariantId: '',
   lemonsqueezyProductId: '',
+  externalCheckoutUrl: '',
   coverImage: '/covers/new-publication.svg',
   pdfUrl: '/api/downloads/new-publication/pdf',
   epubUrl: '/api/downloads/new-publication/epub',
@@ -33,7 +34,7 @@ const TABS = [
   { id: 'pricing', label: 'Pricing', icon: DollarSign },
   { id: 'files', label: 'Files', icon: ImageIcon },
   { id: 'seo', label: 'SEO', icon: Tag },
-  { id: 'lemonsqueezy', label: 'LemonSqueezy', icon: DollarSign },
+  { id: 'payment', label: 'Payment', icon: DollarSign },
 ];
 
 export default function AdminProducts() {
@@ -84,6 +85,7 @@ export default function AdminProducts() {
       stock: product.stock,
       lemonsqueezyVariantId: product.lemonsqueezyVariantId || '',
       lemonsqueezyProductId: product.lemonsqueezyProductId || '',
+      externalCheckoutUrl: product.externalCheckoutUrl || '',
       coverImage: product.coverImage,
       pdfUrl: product.pdfUrl,
       epubUrl: product.epubUrl,
@@ -147,7 +149,7 @@ export default function AdminProducts() {
               <th className="px-4 md:px-6 py-4">Price</th>
               <th className="px-4 md:px-6 py-4">Stock</th>
               <th className="px-4 md:px-6 py-4">Status</th>
-              <th className="px-4 md:px-6 py-4">LemonSqueezy</th>
+              <th className="px-4 md:px-6 py-4">Checkout</th>
               <th className="px-4 md:px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -170,11 +172,11 @@ export default function AdminProducts() {
                     {p.visibility}
                   </Badge>
                 </td>
-                <td className="px-4 md:px-6 py-4 text-muted-gray text-xs truncate max-w-[120px]" title={p.lemonsqueezyVariantId || ''}>
-                  {p.lemonsqueezyVariantId ? (
-                    <span className="text-soft-gold">Connected</span>
+                <td className="px-4 md:px-6 py-4 text-muted-gray text-xs truncate max-w-[200px]" title={p.externalCheckoutUrl || ''}>
+                  {p.externalCheckoutUrl ? (
+                    <span className="text-soft-gold">Gumroad Connected</span>
                   ) : (
-                    <span className="text-red-400">Missing</span>
+                    <span className="text-red-400">No checkout URL</span>
                   )}
                 </td>
                 <td className="px-4 md:px-6 py-4 text-right">
@@ -279,12 +281,16 @@ export default function AdminProducts() {
               </>
             )}
 
-            {activeTab === 'lemonsqueezy' && (
+            {activeTab === 'payment' && (
               <>
-                <Input label="LemonSqueezy Variant ID" value={form.lemonsqueezyVariantId || ''} onChange={(e) => setForm({ ...form, lemonsqueezyVariantId: e.target.value })} />
-                <Input label="LemonSqueezy Product ID" value={form.lemonsqueezyProductId || ''} onChange={(e) => setForm({ ...form, lemonsqueezyProductId: e.target.value })} />
+                <Input
+                  label="External Checkout URL (Gumroad)"
+                  value={form.externalCheckoutUrl || ''}
+                  onChange={(e) => setForm({ ...form, externalCheckoutUrl: e.target.value })}
+                  placeholder="https://yourstore.gumroad.com/l/product?wanted=true"
+                />
                 <p className="text-xs text-muted-gray">
-                  Required for checkout. Find these in your LemonSqueezy dashboard under Products → Variants.
+                  When set, buyers are redirected to this URL after entering their name and email on the checkout page.
                 </p>
               </>
             )}

@@ -191,6 +191,14 @@ export default function Checkout() {
                   <h2 className="font-serif text-xl md:text-2xl text-muted-white mb-2">Your Details</h2>
                   <p className="text-muted-gray text-sm mb-6 md:mb-8">Enter your details to receive instant access after purchase.</p>
 
+                  {!product.externalCheckoutUrl && (
+                    <div className="bg-red-500/10 border border-red-500/20 p-4 mb-6">
+                      <p className="text-sm text-red-400">
+                        Checkout is not configured for this product yet. Please add a Gumroad checkout URL in the admin panel.
+                      </p>
+                    </div>
+                  )}
+
                   <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
                     <div className="grid sm:grid-cols-2 gap-5 md:gap-6">
                       <div className="relative">
@@ -227,15 +235,15 @@ export default function Checkout() {
                     <div className="bg-white/5 border border-white/10 p-4">
                       <div className="flex items-center gap-3 mb-2">
                         <CreditCard size={18} className="text-soft-gold" />
-                        <p className="text-sm text-muted-white font-medium">Secure payment via LemonSqueezy</p>
+                        <p className="text-sm text-muted-white font-medium">Secure payment via Gumroad</p>
                       </div>
                       <p className="text-xs text-muted-gray pl-8">
-                        You will be redirected to our secure payment provider to complete the purchase.
+                        You will be redirected to Gumroad to complete your $29.99 purchase after confirming your details.
                       </p>
                     </div>
 
                     <MagneticButton strength={0.15} className="w-full">
-                      <Button type="submit" size="lg" className="w-full h-14 text-lg pulse-gold shimmer-border group">
+                      <Button type="submit" disabled={!product.externalCheckoutUrl} size="lg" className="w-full h-14 text-lg pulse-gold shimmer-border group disabled:opacity-40 disabled:cursor-not-allowed">
                         {submitting ? (
                           <>
                             <Loader2 size={20} className="mr-2 animate-spin" /> Processing...

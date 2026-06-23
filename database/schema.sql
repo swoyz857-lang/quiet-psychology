@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS products (
   stock INTEGER DEFAULT 0,
   lemonsqueezy_variant_id TEXT,
   lemonsqueezy_product_id TEXT,
+  external_checkout_url TEXT,
   meta_title TEXT NOT NULL,
   meta_description TEXT NOT NULL,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,

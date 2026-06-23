@@ -16,6 +16,7 @@ const productSchema = z.object({
   stock: z.number().int().min(0).default(0),
   lemonsqueezyVariantId: z.string().nullable().optional(),
   lemonsqueezyProductId: z.string().nullable().optional(),
+  externalCheckoutUrl: z.string().url().nullable().optional(),
   coverImage: z.string().min(1),
   pdfUrl: z.string().min(1),
   epubUrl: z.string().min(1),
@@ -45,6 +46,7 @@ function rowToProduct(row: Record<string, unknown>): Product {
     stock: (row.stock as number) ?? 0,
     lemonsqueezyVariantId: (row.lemonsqueezy_variant_id as string | null) ?? null,
     lemonsqueezyProductId: (row.lemonsqueezy_product_id as string | null) ?? null,
+    externalCheckoutUrl: (row.external_checkout_url as string | null) ?? null,
     metaTitle: row.meta_title as string,
     metaDescription: row.meta_description as string,
     createdAt: row.created_at as string,
@@ -81,8 +83,8 @@ app.post('/', authenticate, requireAdmin, async (c) => {
     `INSERT INTO products (
       slug, title, subtitle, description, short_description, price, compare_price,
       cover_image, pdf_url, epub_url, visibility, featured, stock,
-      lemonsqueezy_variant_id, lemonsqueezy_product_id, meta_title, meta_description
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      lemonsqueezy_variant_id, lemonsqueezy_product_id, external_checkout_url, meta_title, meta_description
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       data.slug,
       data.title,
@@ -99,6 +101,7 @@ app.post('/', authenticate, requireAdmin, async (c) => {
       data.stock,
       data.lemonsqueezyVariantId ?? null,
       data.lemonsqueezyProductId ?? null,
+      data.externalCheckoutUrl ?? null,
       data.metaTitle,
       data.metaDescription,
     ]
@@ -132,6 +135,7 @@ app.put('/:id', authenticate, requireAdmin, async (c) => {
     stock: 'stock',
     lemonsqueezyVariantId: 'lemonsqueezy_variant_id',
     lemonsqueezyProductId: 'lemonsqueezy_product_id',
+    externalCheckoutUrl: 'external_checkout_url',
   };
 
   for (const [key, value] of Object.entries(data)) {
