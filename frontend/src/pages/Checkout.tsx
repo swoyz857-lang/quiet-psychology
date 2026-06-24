@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { Loader2, Shield, Check, Lock, Download, Eye, Zap, ArrowRight, Flame, CreditCard, User, Mail } from 'lucide-react';
+import { Loader2, Shield, Check, Lock, Download, Eye, Zap, ArrowRight, CreditCard, User, Mail } from 'lucide-react';
 import { useProduct } from '../hooks/useProducts';
 import { useParallax } from '../hooks/useParallax';
 import SEO from '../components/SEO';
@@ -8,10 +8,8 @@ import ScrollReveal from '../components/ScrollReveal';
 import MagneticButton from '../components/MagneticButton';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
-import StarRating from '../components/ui/StarRating';
 import { api } from '../lib/api';
 import { formatPrice } from '../lib/utils';
-import { TRUST_METRICS } from '../lib/constants';
 
 const TRUST_BADGES = [
   { icon: Lock, text: 'SSL Secure' },
@@ -86,15 +84,6 @@ export default function Checkout() {
               <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-heading mb-4">
                 Complete Your Purchase
               </h1>
-              <div className="flex items-center justify-center gap-3 md:gap-4 text-sm text-body">
-                <span className="flex items-center gap-1">
-                  <StarRating rating={TRUST_METRICS.rating} size={14} /> {TRUST_METRICS.rating.toFixed(1)}
-                </span>
-                <span className="text-body/40">|</span>
-                <span>{TRUST_METRICS.reviews} verified reviews</span>
-                <span className="hidden sm:inline text-body/40">|</span>
-                <span className="hidden sm:inline">{TRUST_METRICS.purchases.toLocaleString('en-US')} purchases</span>
-              </div>
             </ScrollReveal>
           </div>
 
@@ -146,13 +135,6 @@ export default function Checkout() {
                   {discount > 0 && (
                     <div className="mb-6 px-3 py-2.5 bg-soft-gold/10 border border-soft-gold/20 text-soft-gold text-sm text-center">
                       You save {formatPrice(savings)} ({discount}% off) — limited pricing
-                    </div>
-                  )}
-
-                  {product.stock > 0 && (
-                    <div className="mb-6 flex items-center justify-center gap-2 text-sm text-soft-gold/90">
-                      <Flame size={14} className="text-soft-gold" />
-                      Only {product.stock.toLocaleString('en-US')} copies remaining
                     </div>
                   )}
 

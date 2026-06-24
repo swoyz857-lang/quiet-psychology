@@ -10,13 +10,6 @@ export const BOOK_FEATURES = [
   'Lifetime ownership',
 ];
 
-export const TRUST_METRICS = {
-  rating: 4.8,
-  reviews: 154,
-  purchases: 2874,
-  readers: 54000,
-};
-
 export const FAQ_ITEMS = [
   {
     question: 'What is included with each book?',

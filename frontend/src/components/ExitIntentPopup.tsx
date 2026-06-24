@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, Star, Users, BookOpen } from 'lucide-react';
+import { X, BookOpen } from 'lucide-react';
 import EmailCapture from './EmailCapture';
 
 export default function ExitIntentPopup() {
@@ -67,15 +67,6 @@ export default function ExitIntentPopup() {
             <p className="text-muted-gray text-sm md:text-base leading-relaxed mb-6">
               Join the private archive for early access to every new release, exclusive reader updates, and first looks at new frameworks before they go public.
             </p>
-
-            <div className="flex flex-wrap items-center gap-3 mb-6 text-xs text-muted-gray">
-              <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1">
-                <Star size={10} className="text-soft-gold fill-soft-gold" /> 4.8 rating
-              </span>
-              <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1">
-                <Users size={10} className="text-soft-gold" /> 2,874 sold
-              </span>
-            </div>
 
             <EmailCapture
               source="exit-intent"

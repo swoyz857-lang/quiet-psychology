@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Lock, Eye, Sparkles, Flame, ChevronDown, Star, Users } from 'lucide-react';
+import { ArrowRight, Lock, Eye, Sparkles, ChevronDown } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { useParallax } from '../hooks/useParallax';
 import { trackPageView } from '../hooks/useAnalytics';
@@ -12,7 +12,6 @@ import ScrollReveal from '../components/ScrollReveal';
 import MagneticButton from '../components/MagneticButton';
 import SpotlightCard from '../components/SpotlightCard';
 import BookCard from '../components/BookCard';
-import TrustIndicators from '../components/TrustIndicators';
 import Typewriter from '../components/Typewriter';
 import Book3D from '../components/Book3D';
 import EmailCapture from '../components/EmailCapture';
@@ -23,8 +22,7 @@ import Card from '../components/ui/Card';
 
 import PricingDisplay from '../components/PricingDisplay';
 import BackgroundVideo from '../components/BackgroundVideo';
-import { FAQ_ITEMS, TRUST_METRICS } from '../lib/constants';
-import { DEMO_REVIEWS } from '../lib/demoReviews';
+import { FAQ_ITEMS } from '../lib/constants';
 import { api } from '../lib/api';
 import type { Review } from '../types';
 
@@ -54,10 +52,7 @@ export default function Home() {
 
   useEffect(() => {
     trackPageView('/');
-    api.reviews.list().then((data) => {
-      const merged = data.length > 0 ? data : DEMO_REVIEWS;
-      setReviews(merged);
-    }).catch(() => setReviews(DEMO_REVIEWS));
+    api.reviews.list().then(setReviews).catch(() => {});
   }, []);
 
   const featured = products.find((p) => p.slug === 'the-no-contact-blueprint') || products[0];
@@ -122,25 +117,6 @@ export default function Home() {
               }}
             />
           ))}
-        </div>
-
-        {/* Trust bar — mobile + desktop */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto mt-2 md:mt-0 mb-6 md:mb-10">
-          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5 animate-fade-in">
-            <div className="flex items-center gap-1.5 surface-glass px-3 py-1.5 rounded-full">
-              <Star size={14} className="text-soft-gold fill-soft-gold" />
-              <span className="text-sm font-medium text-heading">{TRUST_METRICS.rating.toFixed(1)}</span>
-              <span className="text-xs text-body hidden sm:inline">({TRUST_METRICS.reviews} reviews)</span>
-            </div>
-            <div className="flex items-center gap-1.5 surface-glass px-3 py-1.5 rounded-full">
-              <span className="text-sm font-medium text-heading">{TRUST_METRICS.purchases.toLocaleString('en-US')}</span>
-              <span className="text-xs text-body">sold</span>
-            </div>
-            <div className="flex items-center gap-1.5 surface-glass px-3 py-1.5 rounded-full">
-              <span className="text-sm font-medium text-heading">{TRUST_METRICS.readers.toLocaleString('en-US')}+</span>
-              <span className="text-xs text-body">readers</span>
-            </div>
-          </div>
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl w-full flex-1 flex flex-col justify-center">
@@ -224,12 +200,7 @@ export default function Home() {
                       <div className="font-serif">
                         <PricingDisplay price={featured.price} comparePrice={featured.comparePrice} size="sm" layout="horizontal" showDiscount />
                       </div>
-                      {featured.stock > 0 && (
-                        <p className="flex items-center gap-1.5 mt-1.5 sm:mt-2 text-[10px] text-soft-gold/90">
-                          <Flame size={10} className="text-soft-gold" />
-                          Only {featured.stock.toLocaleString('en-US')} left
-                        </p>
-                      )}
+
                     </div>
                   </div>
                 </Link>
@@ -310,33 +281,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust */}
-      <section className="page-section surface-elevated">
-        <div className="container-site">
-          <ScrollReveal>
-            <SectionHeading eyebrow="Trust" title="A Trusted Archive" reveal />
-          </ScrollReveal>
-          <div className="mt-14 md:mt-20">
-            <TrustIndicators />
-          </div>
-        </div>
-      </section>
-
       {/* Reviews */}
-      <section className="page-section">
-        <div className="container-site">
-          <ScrollReveal>
-            <SectionHeading eyebrow="Reader Reviews" title="What Archive Readers Say" />
-          </ScrollReveal>
-          <div className="mt-14 md:mt-20 grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {reviews.slice(0, 6).map((review, i) => (
-              <ScrollReveal key={review.id} delay={i * 100}>
-                <ReviewCard review={review} />
-              </ScrollReveal>
-            ))}
+      {reviews.length > 0 && (
+        <section className="page-section">
+          <div className="container-site">
+            <ScrollReveal>
+              <SectionHeading eyebrow="Reader Reviews" title="What Archive Readers Say" />
+            </ScrollReveal>
+            <div className="mt-14 md:mt-20 grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {reviews.slice(0, 6).map((review, i) => (
+                <ScrollReveal key={review.id} delay={i * 100}>
+                  <ReviewCard review={review} />
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* FAQ */}
       <section className="page-section surface-elevated">
@@ -371,14 +332,7 @@ export default function Home() {
                   <p className="text-body text-base md:text-lg leading-relaxed mb-6 max-w-md mx-auto md:mx-0">
                     Be the first to know when new intelligence publications drop. Join the private archive for exclusive updates and early release announcements.
                   </p>
-                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs text-body">
-                    <span className="flex items-center gap-1.5 surface-glass px-3 py-1.5">
-                      <Star size={12} className="text-soft-gold fill-soft-gold" /> 4.8 reader rating
-                    </span>
-                    <span className="flex items-center gap-1.5 surface-glass px-3 py-1.5">
-                      <Users size={12} className="text-soft-gold" /> 54,000+ readers
-                    </span>
-                  </div>
+
                 </div>
               </ScrollReveal>
 

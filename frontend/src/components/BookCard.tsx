@@ -4,7 +4,7 @@ import { formatPrice } from '../lib/utils';
 import Badge from './ui/Badge';
 import TiltCard from './TiltCard';
 import SpotlightCard from './SpotlightCard';
-import { Flame } from 'lucide-react';
+
 
 interface BookCardProps {
   product: Product;
@@ -51,12 +51,7 @@ export default function BookCard({ product, featured }: BookCardProps) {
                 {formatPrice(product.comparePrice)}
               </span>
             </div>
-            {product.stock > 0 && (
-              <p className="flex items-center gap-1.5 text-[11px] tracking-wide text-soft-gold/90">
-                <Flame size={12} className="text-soft-gold" />
-                Only {product.stock.toLocaleString('en-US')} copies remaining
-              </p>
-            )}
+
           </div>
         </Link>
       </SpotlightCard>

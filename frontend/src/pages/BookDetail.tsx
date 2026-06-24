@@ -1,6 +1,6 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Check, ArrowRight, Download, Eye, Flame, BookOpen, FileText, Shield, Star, Users, ChevronRight } from 'lucide-react';
+import { Check, ArrowRight, Download, Eye, BookOpen, FileText, Shield, ChevronRight } from 'lucide-react';
 import { useProduct } from '../hooks/useProducts';
 import { useParallax } from '../hooks/useParallax';
 import { trackProductView } from '../hooks/useAnalytics';
@@ -16,10 +16,9 @@ import Badge from '../components/ui/Badge';
 import Accordion from '../components/ui/Accordion';
 import ReviewCard from '../components/ReviewCard';
 import BookCard from '../components/BookCard';
-import StarRating from '../components/ui/StarRating';
 import { api } from '../lib/api';
 import type { Product, Review } from '../types';
-import { FAQ_ITEMS, TRUST_METRICS } from '../lib/constants';
+import { FAQ_ITEMS } from '../lib/constants';
 import { formatPrice } from '../lib/utils';
 
 const LEARNING_OUTCOMES: Record<string, string[]> = {
@@ -91,15 +90,6 @@ const WHO_NOT_FOR = [
   'People unwilling to examine their own behavior',
 ];
 
-const BUBBLE_REVIEWS = [
-  { text: 'This changed everything for me.', author: 'A.Y.' },
-  { text: 'Worth every dollar.', author: 'M.K.' },
-  { text: 'I finally understood silence.', author: 'S.T.' },
-  { text: 'Nothing like typical self-help.', author: 'R.L.' },
-  { text: 'A premium archive, indeed.', author: 'E.D.' },
-  { text: 'My mindset shifted in 3 days.', author: 'N.B.' },
-];
-
 const INCLUDED_ITEMS = [
   { icon: FileText, title: 'Premium PDF', description: 'Print-ready, formatted for all devices' },
   { icon: BookOpen, title: 'EPUB Edition', description: 'Optimized for e-readers and tablets' },
@@ -111,7 +101,7 @@ export default function BookDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { product, loading, error } = useProduct(slug || '');
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [stats, setStats] = useState({ count: TRUST_METRICS.reviews, average: TRUST_METRICS.rating });
+  const [stats, setStats] = useState({ count: 0, average: 0 });
   const [related, setRelated] = useState<Product[]>([]);
   const [showStickyCta, setShowStickyCta] = useState(false);
   const parallaxY = useParallax(0.2);
@@ -122,7 +112,7 @@ export default function BookDetail() {
       api.reviews.list(product.id).then(setReviews).catch(() => {});
       api.reviews
         .stats(product.id)
-        .then((s) => setStats(s.count > 0 ? s : { count: TRUST_METRICS.reviews, average: TRUST_METRICS.rating }))
+        .then((s) => setStats(s.count > 0 ? s : { count: 0, average: 0 }))
         .catch(() => {});
       api.products.list().then((all) => setRelated(all.filter((p) => p.id !== product.id))).catch(() => {});
     }
@@ -137,16 +127,6 @@ export default function BookDetail() {
   }, []);
 
   const isNoContact = product?.slug === 'the-no-contact-blueprint';
-
-  const bubbles = useMemo(() => {
-    return BUBBLE_REVIEWS.map((bubble, i) => ({
-      ...bubble,
-      id: i,
-      row: i % 4,
-      duration: 32 + (i % 3) * 8,
-      delay: i * -7,
-    }));
-  }, []);
 
   if (loading) {
     return (
@@ -224,25 +204,6 @@ export default function BookDetail() {
       </div>
 
       <section className="relative min-h-screen pt-28 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {isNoContact && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(201,169,98,0.08),transparent_50%)]" />
-            {bubbles.map((bubble) => (
-              <div
-                key={bubble.id}
-                className="absolute whitespace-nowrap px-5 py-2.5 surface-glass rounded-full text-sm text-heading shadow-sm backdrop-blur-sm animate-bubble"
-                style={{
-                  top: `${12 + bubble.row * 18}%`,
-                  animationDuration: `${bubble.duration}s`,
-                  animationDelay: `${bubble.delay}s`,
-                }}
-              >
-                "{bubble.text}" <span className="text-soft-gold ml-2">— {bubble.author}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
         <div
           className="absolute inset-0 bg-cream dark:bg-obsidian transition-colors duration-500"
           style={{ transform: `translateY(${parallaxY}px)` }}
@@ -281,19 +242,6 @@ export default function BookDetail() {
                 </h1>
                 <p className="text-xl md:text-2xl text-body mb-5">{product.subtitle}</p>
 
-                <div className="flex flex-wrap items-center gap-3 md:gap-5 mb-6 text-sm text-body">
-                  <div className="flex items-center gap-2 surface-glass px-3 py-1.5">
-                    <StarRating rating={stats.average} size={16} />
-                    <span className="text-heading font-medium">{stats.average.toFixed(1)}</span>
-                  </div>
-                  <span>{stats.count} reviews</span>
-                  {isNoContact && (
-                    <>
-                      <span className="hidden sm:inline text-body/60">|</span>
-                      <span>{TRUST_METRICS.purchases.toLocaleString('en-US')} purchases</span>
-                    </>
-                  )}
-                </div>
               </ScrollReveal>
 
               <ScrollReveal delay={100}>
@@ -308,12 +256,7 @@ export default function BookDetail() {
                       You save {formatPrice(savings)} ({discount}% off) — limited pricing
                     </p>
                   )}
-                  {product.stock > 0 && (
-                    <p className="flex items-center gap-2 mt-3 text-sm text-soft-gold/90">
-                      <Flame size={14} className="text-soft-gold" />
-                      Only {product.stock.toLocaleString('en-US')} copies remaining at this price
-                    </p>
-                  )}
+
                 </div>
               </ScrollReveal>
 
@@ -447,12 +390,6 @@ export default function BookDetail() {
                 No motivational filler. No guru branding. Only clean, research-driven frameworks you can apply immediately.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-body">
-                <span className="flex items-center gap-1.5">
-                  <Star size={14} className="text-soft-gold fill-soft-gold" /> {TRUST_METRICS.rating} reader rating
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Users size={14} className="text-soft-gold" /> {TRUST_METRICS.purchases.toLocaleString('en-US')} purchases
-                </span>
                 <span className="flex items-center gap-1.5">
                   <BookOpen size={14} className="text-soft-gold" /> 4 publications
                 </span>

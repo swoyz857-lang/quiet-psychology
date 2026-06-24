@@ -13,8 +13,6 @@ import PageTransition from './PageTransition';
 import MouseTrail from './MouseTrail';
 import Sparkles from './Sparkles';
 
-import SocialProofTicker from './SocialProofTicker';
-
 export default function Layout() {
   return (
     <div className="relative min-h-screen flex flex-col surface-page">
@@ -34,7 +32,6 @@ export default function Layout() {
       </main>
       <Footer />
       <SupportWidget />
-      <SocialProofTicker />
       <ExitIntentPopup />
       <MobileBottomNav />
     </div>
